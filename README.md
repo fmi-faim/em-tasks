@@ -10,6 +10,7 @@ are wrapped into [Prefect](https://github.com/prefecthq/prefect) tasks.
 ## Installation
 Install this package from github:
 ```shell
+mamba install -c conda-forge pyimagej openjdk=8
 pip install git+https://github.com/fmi-faim/em-tasks@v0.0.1
 ```
 This installs tag [v0.0.1](https://github.com/fmi-faim/em-tasks/tree/v0.0.1).

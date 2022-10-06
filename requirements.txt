@@ -1,4 +1,0 @@
-ncempy
-prefect[github]==1.3.0
-scikit-image
-scipy
