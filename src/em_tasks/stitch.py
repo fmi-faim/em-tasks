@@ -16,7 +16,8 @@ def stitch_tiles(input_dir, tileconf_filename, save_path=None, logger=logging):
 run("Grid/Collection stitching", "type=[Positions from file] order=[Defined by TileConfiguration]\
  directory="+directory+" layout_file="+layout_file+" fusion_method=[Intensity of random input tile]\
  regression_threshold=0.30 max/avg_displacement_threshold=2.50 absolute_displacement_threshold=3.50\
- computation_parameters=[Save computation time (but use more RAM)] image_output=[Fuse and display]");
+ compute_overlap computation_parameters=[Save computation time (but use more RAM)]\
+ image_output=[Fuse and display]");
 saveAs("Tiff", fused_path);
 run("Close");
     """
