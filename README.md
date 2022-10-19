@@ -1,16 +1,11 @@
 # EM Tasks
 
-A collection of tasks to process EM data from TIA .ser files.
-
-Default task implementations are
-available under [src/em_tasks/task](./src/em_tasks/task). In
-[src/em_tasks/prefect_task](./src/em_tasks/prefect_task) the same tasks
-are wrapped into [Prefect](https://github.com/prefecthq/prefect) tasks.
+A collection of tasks to export and stitch EM data from TIA .ser files.
 
 ## Installation
 Install this package from github:
 ```shell
 mamba install -c conda-forge pyimagej openjdk=8
-pip install git+https://github.com/fmi-faim/em-tasks@v0.0.1
+pip install git+https://github.com/fmi-faim/em-tasks@v0.3.0
 ```
-This installs tag [v0.0.1](https://github.com/fmi-faim/em-tasks/tree/v0.0.1).
+This installs tag [v0.3.0](https://github.com/fmi-faim/em-tasks/tree/v0.3.0).
