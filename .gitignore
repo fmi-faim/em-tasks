@@ -3,3 +3,4 @@ __pycache__
 _version.py
 envs
 src/em_tasks.egg-info
+.coverage

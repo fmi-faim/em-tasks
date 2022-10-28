@@ -63,9 +63,9 @@ def export_normalized_uint8(data, pixel_size, save_dir, basename, prefix="8bit",
     dest_dir = os.path.join(save_dir, prefix)
     Path(dest_dir).mkdir(parents=True, exist_ok=True)
     dest_path = os.path.join(dest_dir, basename + '.tif')
-    mode = stats.mode(data.flatten())
+    mode = stats.mode(data.flatten(), keepdims=False)
     normalized = rescale_intensity(data,
-                                   in_range=(mode[0][0] - intensity_range, mode[0][0] + intensity_range),
+                                   in_range=(mode[0] - intensity_range, mode[0] + intensity_range),
                                    out_range=np.uint8)
     _write_image_with_calibration(dest_path, normalized, pixel_size)
 
