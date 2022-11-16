@@ -1,10 +1,10 @@
-import configparser
 from pathlib import Path
 
 import numpy
 import pytest
 
-from em_tasks.export import load_ser_file, export_uint16, export_normalized_uint8, process_metadata
+from em_tasks.export import (export_normalized_uint8, export_uint16, get_files,
+                             load_ser_file, process_metadata)
 
 
 @pytest.fixture
@@ -38,6 +38,11 @@ dim = 2
 """
 
 
+def test_get_files(tmp_path):
+    files = get_files(tmp_path, "*.tif")
+    assert len(files) == 0
+
+
 def test_load_ser_file(sample_ser_file):
     metadata, data, pixel_size = load_ser_file(sample_ser_file)
     assert data.shape == (512, 512)
@@ -66,3 +71,9 @@ def test_process_metadata(sample_metadata, tmp_path, expected_tileconf):
     assert tile_conf_file.exists()
     with open(tile_conf_file, 'r') as file:
         assert file.read() == expected_tileconf
+
+
+def test_process_metadata_with_wrong_path(sample_metadata):
+    tmp_path = Path("/non/existent/path")
+    with pytest.raises(AssertionError):
+        process_metadata(sample_metadata, tmp_path)

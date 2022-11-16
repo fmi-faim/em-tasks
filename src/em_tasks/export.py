@@ -1,15 +1,12 @@
+import logging
 import shutil
-
-import ncempy.io as nio
-import os.path
-from glob import glob
 from pathlib import Path
 
-import logging
+import ncempy.io as nio
 import numpy as np
 from scipy import stats
-from tifffile import imwrite
 from skimage.exposure import rescale_intensity
+from tifffile import imwrite
 
 tile_conf_header = ["# Define the number of dimensions we are working on\n",
                     "dim = 2\n",
@@ -17,7 +14,7 @@ tile_conf_header = ["# Define the number of dimensions we are working on\n",
 
 
 def get_files(input_dir, filename_filter, logger=logging):
-    files = glob(os.path.join(input_dir, filename_filter))
+    files = sorted(Path(input_dir).glob(filename_filter))
     logger.info(f"Found {len(files)} files matching '{filename_filter}'.")
     return files
 
@@ -32,10 +29,9 @@ def load_ser_file(ser_file, logger=logging):
 
 
 def process_metadata(metadata_list, save_dir, prefixes=[], filename="TileConfiguration.txt", logger=logging):
-    # make sure save_dir exists
-    if not os.path.exists(save_dir):
-        raise RuntimeError
-    with open(os.path.join(save_dir, filename), 'w') as f:
+    # assert save_dir exists
+    assert Path(save_dir).exists(), f"Output directory {save_dir} doesn't exist"
+    with open(Path(save_dir, filename), 'w') as f:
         f.writelines(tile_conf_header)
         for meta in metadata_list:
             if 'Stage X [um]' not in meta:
@@ -49,20 +45,20 @@ def process_metadata(metadata_list, save_dir, prefixes=[], filename="TileConfigu
                 f"{meta['image_file_name']}; ; " +
                 f"({meta['Stage Y [um]'] / meta['pixel_size']}, {meta['Stage X [um]'] / meta['pixel_size']})\n")
     for p in prefixes:
-        shutil.copy(os.path.join(save_dir, filename), os.path.join(save_dir, p))
+        shutil.copy(Path(save_dir, filename), Path(save_dir, p))
 
 
 def export_uint16(data, pixel_size, save_dir, basename, prefix="16bit"):
-    dest_dir = os.path.join(save_dir, prefix)
+    dest_dir = Path(save_dir) / prefix
     Path(dest_dir).mkdir(parents=True, exist_ok=True)
-    dest_path = os.path.join(dest_dir, basename + '.tif')
+    dest_path = Path(dest_dir) / (basename + '.tif')
     _write_image_with_calibration(dest_path, data, pixel_size)
 
 
 def export_normalized_uint8(data, pixel_size, save_dir, basename, prefix="8bit", intensity_range=500):
-    dest_dir = os.path.join(save_dir, prefix)
+    dest_dir = Path(save_dir) / prefix
     Path(dest_dir).mkdir(parents=True, exist_ok=True)
-    dest_path = os.path.join(dest_dir, basename + '.tif')
+    dest_path = Path(dest_dir) / (basename + '.tif')
     mode = stats.mode(data.flatten(), keepdims=False)
     normalized = rescale_intensity(data,
                                    in_range=(mode[0] - intensity_range, mode[0] + intensity_range),
