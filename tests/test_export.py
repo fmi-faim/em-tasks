@@ -3,8 +3,13 @@ from pathlib import Path
 import numpy
 import pytest
 
-from em_tasks.export import (export_normalized_uint8, export_uint16, get_files,
-                             load_ser_file, process_metadata)
+from em_tasks.export import (
+    export_normalized_uint8,
+    export_uint16,
+    get_files,
+    load_ser_file,
+    process_metadata,
+)
 
 
 @pytest.fixture
@@ -16,15 +21,32 @@ def sample_ser_file():
 def sample_data():
     numpy.random.seed(0)
     image = numpy.random.rand(32, 32) * 4096
-    return image.astype('uint16')
+    return image.astype("uint16")
 
 
 @pytest.fixture
 def sample_metadata():
-    return [{'image_file_name': '1.tif', 'pixel_size': 1.0, 'Stage X [um]': 10.0, 'Stage Y [um]': 40.0},
-            {'image_file_name': '2.tif', 'pixel_size': 1.0, 'Stage X [um]': 20.0, 'Stage Y [um]': 50.0},
-            {'image_file_name': 'missing_metadata.tif', 'pixel_size': 1.0},
-            {'image_file_name': '3.tif', 'pixel_size': 1.0, 'Stage X [um]': 30.0, 'Stage Y [um]': 60.0}]
+    return [
+        {
+            "image_file_name": "1.tif",
+            "pixel_size": 1.0,
+            "Stage X [um]": 10.0,
+            "Stage Y [um]": 40.0,
+        },
+        {
+            "image_file_name": "2.tif",
+            "pixel_size": 1.0,
+            "Stage X [um]": 20.0,
+            "Stage Y [um]": 50.0,
+        },
+        {"image_file_name": "missing_metadata.tif", "pixel_size": 1.0},
+        {
+            "image_file_name": "3.tif",
+            "pixel_size": 1.0,
+            "Stage X [um]": 30.0,
+            "Stage Y [um]": 60.0,
+        },
+    ]
 
 
 @pytest.fixture
@@ -48,7 +70,7 @@ def test_load_ser_file(sample_ser_file):
     assert data.shape == (512, 512)
     assert pixel_size[0] == pixel_size[1]
     assert pixel_size[0] == 1.1104135456663472e-08
-    assert metadata['Stage X [um]'] is not None
+    assert metadata["Stage X [um]"] is not None
 
 
 def test_export_uint16(tmp_path, sample_data):
@@ -69,7 +91,7 @@ def test_process_metadata(sample_metadata, tmp_path, expected_tileconf):
     process_metadata(sample_metadata, tmp_path)
     tile_conf_file = Path(tmp_path, "TileConfiguration.txt")
     assert tile_conf_file.exists()
-    with open(tile_conf_file, 'r') as file:
+    with open(tile_conf_file) as file:
         assert file.read() == expected_tileconf
 
 

@@ -24,7 +24,7 @@ run("Close");
     args = {
         "directory": input_dir,
         "layout_file": tileconf_filename,
-        "fused_path": save_path
+        "fused_path": save_path,
     }
     logger.info("Running Grid/Collection Stitching")
     ij.py.run_macro(macro, args)
